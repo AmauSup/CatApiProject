@@ -1,0 +1,158 @@
+.tournoi-page {
+  min-height: 100vh;
+  padding: 20px 15px; /* ⬇️ moins de padding */
+  background: linear-gradient(135deg, #1f1f1f, #101820, #1a2f45);
+  color: white;
+  text-align: center;
+  overflow-y: auto; /* ✅ permet scroll propre */
+}
+
+.tournoi-title {
+  font-size: 1.8rem; /* ⬇️ réduit */
+  margin-bottom: 6px;
+}
+
+.tournoi-subtitle {
+  color: #d1d5db;
+  margin-bottom: 20px; /* ⬇️ réduit */
+  font-size: 1rem;
+}
+
+.tournoi-loading {
+  font-size: 1rem;
+  margin-top: 30px;
+}
+
+.tournoi-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px; /* ⬇️ réduit */
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.cat-card {
+  position: relative;
+  width: 340px; /* ⬇️ plus petit */
+  max-width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #111827;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.left-card {
+  border: 2px solid #ef4444; /* ⬇️ plus fin */
+}
+
+.right-card {
+  border: 2px solid #38bdf8;
+}
+
+.cat-image {
+  width: 100%;
+  height: 320px; /* 🔥 IMPORTANT réduit */
+  object-fit: cover;
+  display: block;
+}
+
+.cat-overlay {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 55px; /* ⬇️ remonte */
+  padding: 10px 12px;
+  border-radius: 10px;
+  text-align: left;
+  backdrop-filter: blur(6px);
+}
+
+.left-overlay {
+  background: rgba(239, 68, 68, 0.8);
+}
+
+.right-overlay {
+  background: rgba(56, 189, 248, 0.8);
+}
+
+.cat-overlay h2 {
+  margin: 0 0 6px 0;
+  font-size: 1.1rem; /* ⬇️ */
+}
+
+.cat-overlay p {
+  margin: 3px 0;
+  font-size: 0.85rem; /* ⬇️ */
+  line-height: 1.2;
+}
+
+.choose-btn {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: none;
+  padding: 8px 14px; /* ⬇️ */
+  border-radius: 999px;
+  font-size: 0.85rem; /* ⬇️ */
+  font-weight: 700;
+  cursor: pointer;
+  color: white;
+}
+
+.left-btn {
+  background: #ef4444;
+}
+
+.right-btn {
+  background: #38bdf8;
+}
+
+.choose-btn:hover {
+  opacity: 0.9;
+}
+
+.vs-circle {
+  width: 60px; /* ⬇️ */
+  height: 60px;
+  border-radius: 50%;
+  background: white;
+  color: #111827;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem; /* ⬇️ */
+  font-weight: 800;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+.next-round {
+  margin-top: 20px;
+}
+
+.next-btn {
+  background: #f59e0b;
+  color: white;
+  border: none;
+  padding: 10px 18px; /* ⬇️ */
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.next-btn:hover {
+  opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .tournoi-wrapper {
+    flex-direction: column;
+  }
+
+  .cat-image {
+    height: 280px; /* ⬇️ encore réduit mobile */
+  }
+}

@@ -1,0 +1,28 @@
+.app-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.page-title {
+  margin: 0 0 1rem;
+}
+
+.message {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin: 1rem 0;
+}
+
+.message.error {
+  border-color: #e9a3a3;
+  background: #fff5f5;
+}
+
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}

@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import CatCard from '../components/CatCard';
+import likeIcon from '../assets/like-icon.png';
+import dislikeIcon from '../assets/dislike-icon.png';
+import nextIcon from '../assets/next-icon.png';
 import './HomePage.css';
 
 function HomePage() {
@@ -48,15 +51,6 @@ function HomePage() {
     <section className="home-page">
       <h2 className="page-title">Accueil</h2>
 
-      <p className="home-subtitle">
-        Découvre un chat, aime-le, refuse-le ou passe au suivant.
-      </p>
-
-      <div className="home-stats">
-        <span>👍 Likes : {likes}</span>
-        <span>👎 Dislikes : {dislikes}</span>
-      </div>
-
       {error && <p className="message error">{error}</p>}
 
       {loading && <p className="message">Chargement...</p>}
@@ -70,16 +64,19 @@ function HomePage() {
           <CatCard cat={cat} />
 
           <div className="home-actions">
-            <button className="action-button like-button" onClick={handleLike}>
-              👍 Like
+            <button className="like-button" onClick={handleLike} title="J'aime">
+              <img src={likeIcon} alt="Like" className="button-icon" />
+              <span className="button-text">J'aime</span>
             </button>
 
-            <button className="action-button dislike-button" onClick={handleDislike}>
-              👎 Dislike
+            <button className="dislike-button" onClick={handleDislike} title="Je n'aime pas">
+              <img src={dislikeIcon} alt="Dislike" className="button-icon" />
+              <span className="button-text">Pas mal</span>
             </button>
 
-            <button className="action-button next-button" onClick={handleNext}>
-              ⏭ Suivant
+            <button className="next-button" onClick={handleNext} title="Voir le suivant">
+              <img src={nextIcon} alt="Suivant" className="button-icon" />
+              <span className="button-text">Suivant</span>
             </button>
           </div>
         </div>

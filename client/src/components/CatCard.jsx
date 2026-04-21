@@ -59,3 +59,5 @@ CatCard.propTypes = {
 };
 
 export default CatCard;
+
+

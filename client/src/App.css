@@ -1,28 +1,29 @@
 .app-content {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: var(--spacing-md);
 }
 
 .page-title {
-  margin: 0 0 1rem;
+  margin: 0 0 var(--spacing-md);
 }
 
 .message {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 0.75rem;
-  margin: 1rem 0;
+  background: var(--surface-color);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-sm);
+  margin: var(--spacing-md) 0;
+  box-shadow: var(--shadow-light);
 }
 
 .message.error {
-  border-color: #e9a3a3;
+  border-color: var(--accent-color);
   background: #fff5f5;
 }
 
 .cat-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(var(--grid-min-width), 1fr));
+  gap: var(--grid-gap);
 }

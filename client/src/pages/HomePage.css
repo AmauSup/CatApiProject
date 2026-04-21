@@ -1,14 +1,14 @@
 .home-actions {
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-md);
 }
 
 .reload-button {
   height: 38px;
   border: none;
-  border-radius: 6px;
-  background: #198754;
-  color: #fff;
-  padding: 0 1rem;
+  border-radius: var(--border-radius);
+  background: var(--primary-color);
+  color: var(--surface-color);
+  padding: 0 var(--spacing-md);
   cursor: pointer;
 }
 

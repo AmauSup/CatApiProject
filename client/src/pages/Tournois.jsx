@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import "./Tournage.css";
+import "./Tournois.css";
 
-function Tournage() {
+function Tournois() {
   const [cat1, setCat1] = useState(null);
   const [cat2, setCat2] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -128,4 +128,4 @@ function Tournage() {
   );
 }
 
-export default Tournage;
+export default Tournois;

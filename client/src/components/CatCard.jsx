@@ -1,44 +1,33 @@
-import PropTypes from 'prop-types';
-import './CatCard.css';
+import PropTypes from "prop-types";
+import "./CatCard.css";
 
 function CatCard({ cat }) {
-  const breed = cat?.breeds?.[0];
+  if (!cat) return null;
+
+  const formatLifeSpan = (lifeSpan) => {
+    if (!lifeSpan) return "";
+
+    const parts = lifeSpan.split(" - ").map(Number);
+
+    if (parts.length === 2) {
+      const [min, max] = parts;
+      return `${min} - ${max} ans`;
+    }
+
+    return `${lifeSpan} ans`;
+  };
 
   return (
     <article className="cat-card">
-      <div className="cat-card-image-wrapper">
-        <img
-          className="cat-card-image"
-          src={cat.url}
-          alt={breed?.name ? `Chat race ${breed.name}` : 'Image de chat'}
-          loading="lazy"
-        />
-      </div>
+      <img
+        className="cat-card-image"
+        src={cat.image}
+        alt={cat.name}
+        loading="lazy"
+      />
 
-      <div className="cat-card-body">
-        <p className="cat-card-line">
-          <strong>ID:</strong> {cat.id}
-        </p>
-
-        {breed ? (
-          <>
-            <p className="cat-card-line">
-              <strong>Race:</strong> {breed.name}
-            </p>
-            {breed.temperament && (
-              <p className="cat-card-line">
-                <strong>Tempérament:</strong> {breed.temperament}
-              </p>
-            )}
-            {breed.origin && (
-              <p className="cat-card-line">
-                <strong>Origine:</strong> {breed.origin}
-              </p>
-            )}
-          </>
-        ) : (
-          <p className="cat-card-line">Aucune info de race disponible.</p>
-        )}
+      <div className="cat-card-overlay">
+        <h2>Race : {cat.name}</h2>
       </div>
     </article>
   );
@@ -46,18 +35,14 @@ function CatCard({ cat }) {
 
 CatCard.propTypes = {
   cat: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
-    breeds: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string,
-        temperament: PropTypes.string,
-        origin: PropTypes.string
-      })
-    )
-  }).isRequired
+    id: PropTypes.string,
+    name: PropTypes.string,
+    origin: PropTypes.string,
+    temperament: PropTypes.string,
+    lifeSpan: PropTypes.string,
+    weight: PropTypes.string,
+    image: PropTypes.string,
+  }).isRequired,
 };
 
 export default CatCard;
-
-

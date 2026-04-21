@@ -1,28 +1,50 @@
-import { useEffect, useState } from 'react';
-import CatCard from '../components/CatCard';
-import likeIcon from '../assets/like-icon.png';
-import dislikeIcon from '../assets/dislike-icon.png';
-import nextIcon from '../assets/next-icon.png';
-import './HomePage.css';
+import { useEffect, useState } from "react";
+import CatCard from "../components/CatCard";
+import likeIcon from "../assets/like-icon.png";
+import dislikeIcon from "../assets/dislike-icon.png";
+import nextIcon from "../assets/next-icon.png";
+import "./HomePage.css";
 
 function HomePage() {
   const [cat, setCat] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
 
   const loadRandomCat = async () => {
     try {
       setLoading(true);
-      setError('');
+      setError("");
 
-      const res = await fetch('https://api.thecatapi.com/v1/images/search?limit=1&has_breeds=1');
-      const data = await res.json();
+      // 1. récupérer toutes les races
+      const resBreeds = await fetch("https://api.thecatapi.com/v1/breeds");
+      const breeds = await resBreeds.json();
 
-      setCat(data[0] || null);
+      // 2. choisir une race aléatoire
+      const breed =
+        breeds[Math.floor(Math.random() * breeds.length)];
+
+      // 3. récupérer une image liée
+      const imgRes = await fetch(
+        `https://api.thecatapi.com/v1/images/search?breed_ids=${breed.id}&limit=1`
+      );
+      const imgData = await imgRes.json();
+
+      // 4. créer un objet propre
+      const catProfile = {
+        id: breed.id,
+        name: breed.name,
+        origin: breed.origin,
+        temperament: breed.temperament,
+        lifeSpan: breed.life_span,
+        weight: breed.weight.metric,
+        image: imgData[0]?.url || "",
+      };
+
+      setCat(catProfile);
     } catch (err) {
-      setError('Impossible de charger les chats.');
+      setError("Impossible de charger les chats.");
       setCat(null);
     } finally {
       setLoading(false);
@@ -52,31 +74,26 @@ function HomePage() {
       <h2 className="page-title">Accueil</h2>
 
       {error && <p className="message error">{error}</p>}
-
       {loading && <p className="message">Chargement...</p>}
-
-      {!loading && !error && !cat && (
-        <p className="message">Aucune image trouvée.</p>
-      )}
 
       {!loading && !error && cat && (
         <div className="home-card-wrapper">
           <CatCard cat={cat} />
 
           <div className="home-actions">
-            <button className="like-button" onClick={handleLike} title="J'aime">
+            <button className="like-button" onClick={handleLike}>
               <img src={likeIcon} alt="Like" className="button-icon" />
-              <span className="button-text">J'aime</span>
+              <span>Like</span>
             </button>
 
-            <button className="dislike-button" onClick={handleDislike} title="Je n'aime pas">
+            <button className="dislike-button" onClick={handleDislike}>
               <img src={dislikeIcon} alt="Dislike" className="button-icon" />
-              <span className="button-text">Pas mal</span>
+              <span>Dislike</span>
             </button>
 
-            <button className="next-button" onClick={handleNext} title="Voir le suivant">
-              <img src={nextIcon} alt="Suivant" className="button-icon" />
-              <span className="button-text">Suivant</span>
+            <button className="next-button" onClick={handleNext}>
+              <img src={nextIcon} alt="Next" className="button-icon" />
+              <span>Next</span>
             </button>
           </div>
         </div>

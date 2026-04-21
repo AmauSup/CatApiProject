@@ -2,6 +2,13 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const catRoutes = require('./routes/catRoutes');
+const voteRoutes = require('./routes/voteRoutes');
+const favoriteRoutes = require('./routes/favoriteRoutes');
+const authRoutes = require('./routes/authRoutes');
+const auth = require('./middlewares/auth');
+
+// Connexion à la base de données PostgreSQL (Neon)
+const db = require('./services/db');
 
 dotenv.config();
 
@@ -16,6 +23,9 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use('/api/cats', catRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/votes', auth, voteRoutes);
+app.use('/api/favorites', auth, favoriteRoutes);
 
 // Middleware global d'erreur simple pour centraliser les retours d'erreur.
 app.use((err, req, res, next) => {

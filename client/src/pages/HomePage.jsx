@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import CatCard from '../components/CatCard';
+import FavoriteButton from '../components/FavoriteButton';
 import './HomePage.css';
 
 function HomePage() {
@@ -17,7 +18,17 @@ function HomePage() {
       const res = await fetch('https://api.thecatapi.com/v1/images/search?limit=1&has_breeds=1');
       const data = await res.json();
 
-      setCat(data[0] || null);
+      const catData = data[0] || null;
+      setCat(catData);
+
+      // Envoi au backend pour insertion dans la BDD
+      if (catData) {
+        fetch('http://localhost:5000/api/cats/animals', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(catData)
+        });
+      }
     } catch (err) {
       setError('Impossible de charger les chats.');
       setCat(null);
@@ -68,19 +79,17 @@ function HomePage() {
       {!loading && !error && cat && (
         <div className="home-card-wrapper">
           <CatCard cat={cat} />
-
           <div className="home-actions">
             <button className="action-button like-button" onClick={handleLike}>
               👍 Like
             </button>
-
             <button className="action-button dislike-button" onClick={handleDislike}>
               👎 Dislike
             </button>
-
             <button className="action-button next-button" onClick={handleNext}>
               ⏭ Suivant
             </button>
+            {cat.id && <FavoriteButton animalId={cat.id} />}
           </div>
         </div>
       )}

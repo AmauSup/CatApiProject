@@ -2,7 +2,7 @@
 // import Navbar from './components/Navbar';
 // import HomePage from './pages/HomePage';
 // import SearchPage from './pages/SearchPage';
-// import Tournage from './pages/Tournage';
+// import Tournois from './pages/Tournois';
 // import './App.css';
 
 // function App() {
@@ -13,7 +13,7 @@
 //         <Routes>
 //           <Route path="/" element={<HomePage />} />
 //           <Route path="/search" element={<SearchPage />} />
-//           <Route path="/tournoi" element={<Tournage />} />
+//           <Route path="/tournoi" element={<Tournois />} />
 //           <Route path="*" element={<Navigate to="/" replace />} />
 //         </Routes>
 //       </main>
@@ -25,21 +25,36 @@
 
 
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import SearchPage from './pages/SearchPage';
-import Tournage from './pages/Tournage';
+import Tournois from './pages/Tournois';
 import './App.css';
 
 function App() {
+  const [theme, setTheme] = useState(() => {
+    const savedTheme = localStorage.getItem('theme');
+    return savedTheme || 'light';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+  };
+
   return (
     <div className="app">
-      <Navbar />
+      <Navbar theme={theme} onToggleTheme={toggleTheme} />
       <main className="app-content">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/search" element={<SearchPage />} />
-          <Route path="/tournoi" element={<Tournage />} />
+          <Route path="/tournoi" element={<Tournois />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

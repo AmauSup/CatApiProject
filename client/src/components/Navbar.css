@@ -1,6 +1,7 @@
 .navbar {
-  background: #ffffff;
-  border-bottom: 1px solid #ddd;
+  background: var(--background-color);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-color);
 }
 
 .navbar-inner {
@@ -16,6 +17,7 @@
 .navbar-title {
   margin: 0;
   font-size: 1.1rem;
+  color: var(--text-color);
 }
 
 .navbar-links {
@@ -27,13 +29,42 @@
   text-decoration: none;
   padding: 0.5rem 0.75rem;
   border-radius: 6px;
+  color: var(--text-color);
+  transition: background-color 0.2s ease;
 }
 
 .navbar-link:hover {
-  background: #f0f0f0;
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .navbar-link.active {
-  background: #e8f2ff;
-  color: #0a58ca;
+  background: var(--primary-color);
+  color: var(--test-color);
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color);
+}
+
+.theme-toggle:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.theme-icon {
+  width: 24px;
+  height: 24px;
+  stroke: var(--text-color);
 }

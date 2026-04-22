@@ -11,6 +11,7 @@ exports.vote = async (req, res) => {
     await voteOnBreed({ animal_id, voteType, user_id });
     res.json({ message: 'Vote enregistré' });
   } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+  console.error('Erreur vote:', err); // Ajout du log détaillé
+  res.status(500).json({ message: err.message });
+}
 };

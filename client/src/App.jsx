@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import SearchPage from './pages/SearchPage';
+import CatDetailPage from './pages/CatDetailPage';
+import ScoresPage from './pages/ScoresPage';
 import Tournois from './pages/Tournois';
 import LoginForm from './components/LoginForm';
 import SignupForm from './components/SignupForm';
@@ -35,6 +37,8 @@ function App() {
           <Route path="/login" element={<LoginForm />} />
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/favoris" element={<FavoritesList />} />
+          <Route path="/cat/:id" element={<CatDetailPage />} />
+          <Route path="/scores" element={<ScoresPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

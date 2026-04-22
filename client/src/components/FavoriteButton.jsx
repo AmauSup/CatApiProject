@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 import { AuthContext } from '../services/AuthContext';
 
+// animalId doit être l'id d'image (ex: p2U4ZXgKL)
 export default function FavoriteButton({ animalId }) {
   const { user } = useContext(AuthContext);
   const [isFav, setIsFav] = useState(false);
@@ -15,6 +16,7 @@ export default function FavoriteButton({ animalId }) {
     }
     try {
       // Récupère l'id numérique de l'animal
+      // Ici, animalId est déjà l'id d'image unique
       const resId = await fetch(`http://localhost:5000/api/cats/animal-id?api_id=${animalId}`);
       const dataId = await resId.json();
       if (!resId.ok || !dataId.id) throw new Error('Animal non trouvé en base');

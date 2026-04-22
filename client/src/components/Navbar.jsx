@@ -17,6 +17,7 @@ function Navbar({ theme, onToggleTheme }) {
           <NavLink to="/" className={({ isActive }) => isActive ? 'navbar-link active' : 'navbar-link'}>Accueil</NavLink>
           <NavLink to="/search" className={({ isActive }) => isActive ? 'navbar-link active' : 'navbar-link'}>Recherche</NavLink>
           <NavLink to="/tournoi" className={({ isActive }) => isActive ? 'navbar-link active' : 'navbar-link'}>Tournoi</NavLink>
+          <NavLink to="/scores" className={({ isActive }) => isActive ? 'navbar-link active' : 'navbar-link'}>Scores</NavLink>
           <NavLink to="/favoris" className={({ isActive }) => isActive ? 'navbar-link active' : 'navbar-link'}>Favoris</NavLink>
           {user ? (
             <>

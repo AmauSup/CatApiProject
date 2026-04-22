@@ -1,3 +1,8 @@
+// Récupère les détails d'un chat par son id (via backend)
+export async function getCatById(id) {
+  const response = await api.get(`/image/${id}`);
+  return response.data;
+}
 import axios from 'axios';
 
 const API_BASE_URL =
@@ -22,14 +27,14 @@ export async function getCategories() {
   return response.data;
 }
 
-export async function searchCats({ breedId, categoryId, limit }) {
+export async function searchCats({ breedId, categoryId, limit, excludeIds }) {
   const response = await api.get('/search', {
     params: {
       breedId,
       categoryId,
-      limit
+      limit,
+      excludeIds: excludeIds && excludeIds.length ? excludeIds.join(',') : undefined
     }
   });
-
   return response.data;
 }

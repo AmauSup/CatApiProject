@@ -1,3 +1,17 @@
+.start-btn {
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  border: none;
+  background: #6c63ff;
+  color: #fff;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: background 0.2s;
+}
+.start-btn:hover {
+  background: #554ee0;
+}
 .tournoi-page {
   min-height: 100vh;
   padding: var(--spacing-lg) var(--spacing-md);

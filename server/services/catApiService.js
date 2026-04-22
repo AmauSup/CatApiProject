@@ -1,3 +1,26 @@
+// Récupère un chat pour chaque race de la liste
+async function getCatsByBreedList(breedIds) {
+  const breeds = await fetchBreeds();
+  const cats = [];
+  for (const breedId of breedIds) {
+    const breed = breeds.find(b => b.id === breedId);
+    if (!breed) continue;
+    const res = await axios.get(`${CAT_API_BASE_URL}/images/search`, {
+      headers: getAuthHeaders(),
+      params: { breed_id: breed.id, limit: 1, size: 'med', has_breeds: 1 }
+    });
+    if (res.data && res.data[0]) {
+      cats.push({
+        id: res.data[0].id,
+        url: res.data[0].url,
+        breed: breed.name,
+        breedId: breed.id,
+        ...res.data[0]
+      });
+    }
+  }
+  return cats;
+}
 // Récupère un chat par race unique (pour tournoi)
 async function getCatsByUniqueBreeds(limit = 8) {
   const breeds = await fetchBreeds();
@@ -95,5 +118,6 @@ module.exports = {
   fetchBreeds,
   fetchCategories,
   fetchSearchCats,
-  getCatsByUniqueBreeds
+  getCatsByUniqueBreeds,
+  getCatsByBreedList
 };

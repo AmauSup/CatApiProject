@@ -3,8 +3,8 @@ import axios from 'axios';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/tournoi';
 
 const tournoiService = {
-  startTournoi: async () => {
-    const res = await axios.post(`${API_URL}/start`);
+  startTournoi: async (breedIds) => {
+    const res = await axios.post(`${API_URL}/start`, breedIds ? { breedIds } : {});
     return res.data;
   },
   getTournoi: async () => {

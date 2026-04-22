@@ -1,8 +1,10 @@
+require('events').EventEmitter.defaultMaxListeners = 30;
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const catRoutes = require('./routes/catRoutes');
 const voteRoutes = require('./routes/voteRoutes');
+const breedStatsRoutes = require('./routes/breedStatsRoutes');
 const favoriteRoutes = require('./routes/favoriteRoutes');
 const authRoutes = require('./routes/authRoutes');
 const auth = require('./middlewares/auth');
@@ -15,7 +17,12 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors({ origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173' }));
+app.use(cors({
+  origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 app.get('/api/health', (req, res) => {
@@ -23,8 +30,9 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use('/api/cats', catRoutes);
+app.use('/api/cats', breedStatsRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/votes', auth, voteRoutes);
+app.use('/api/votes', voteRoutes);
 app.use('/api/favorites', auth, favoriteRoutes);
 
 // Middleware global d'erreur simple pour centraliser les retours d'erreur.

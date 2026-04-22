@@ -37,27 +37,35 @@ async function fetchCategories() {
   return response.data;
 }
 
-async function fetchSearchCats({ breedId, categoryId, limit }) {
-  const params = {
-    limit,
-    has_breeds: 1,
-    order: 'RANDOM'
-  };
-
-  if (breedId) {
-    params.breed_ids = breedId;
+async function fetchSearchCats({ breedId, categoryId, limit, excludeIds = [] }) {
+  // TheCatAPI limite à 100 images max par requête
+  const batchSize = 100;
+  let uniqueCats = new Map();
+  let tries = 0;
+  const maxTries = 10;
+  const excludeSet = new Set(excludeIds);
+  while (uniqueCats.size < limit && tries < maxTries) {
+    const params = {
+      limit: Math.min(batchSize, limit - uniqueCats.size),
+      has_breeds: 1,
+      order: 'RANDOM'
+    };
+    if (breedId) params.breed_ids = breedId;
+    if (categoryId) params.category_ids = categoryId;
+    const response = await axios.get(`${CAT_API_BASE_URL}/images/search`, {
+      headers: getAuthHeaders(),
+      params
+    });
+    for (const cat of response.data) {
+      if (!excludeSet.has(cat.id) && !uniqueCats.has(cat.id)) {
+        uniqueCats.set(cat.id, cat);
+      }
+    }
+    tries++;
+    // Si l'API ne renvoie plus rien de nouveau, on arrête
+    if (response.data.length === 0) break;
   }
-
-  if (categoryId) {
-    params.category_ids = categoryId;
-  }
-
-  const response = await axios.get(`${CAT_API_BASE_URL}/images/search`, {
-    headers: getAuthHeaders(),
-    params
-  });
-
-  return response.data;
+  return Array.from(uniqueCats.values()).slice(0, limit);
 }
 
 module.exports = {

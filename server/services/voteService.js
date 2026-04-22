@@ -6,26 +6,24 @@ async function voteOnBreed({ animal_id, voteType, user_id }) {
   if (!animalRes.rows.length) throw new Error('Animal inconnu');
   const { breed_id, breed_name, animal_type } = animalRes.rows[0];
 
-  const statRes = await db.query(
-    'SELECT id FROM breed_stats WHERE breed_id = $1 AND animal_type = $2',
-    [breed_id, animal_type]
+  // Toujours tenter d'insérer, si conflit alors update
+  await db.query(
+    `INSERT INTO breed_stats (breed_id, breed_name, animal_type, total_votes, upvotes, downvotes)
+     VALUES ($1, $2, $3, 1, $4, $5)
+     ON CONFLICT (breed_id, animal_type) DO UPDATE SET
+       total_votes = breed_stats.total_votes + 1,
+       upvotes = breed_stats.upvotes + EXCLUDED.upvotes,
+       downvotes = breed_stats.downvotes + EXCLUDED.downvotes,
+       updated_at = CURRENT_TIMESTAMP
+    `,
+    [
+      breed_id,
+      breed_name,
+      animal_type,
+      voteType === 'like' ? 1 : 0,
+      voteType === 'dislike' ? 1 : 0
+    ]
   );
-  if (!statRes.rows.length) {
-    await db.query(
-      'INSERT INTO breed_stats (breed_id, breed_name, animal_type, total_votes, upvotes, downvotes) VALUES ($1, $2, $3, 1, $4, $5)',
-      [breed_id, breed_name, animal_type, voteType === 'like' ? 1 : 0, voteType === 'dislike' ? 1 : 0]
-    );
-  } else {
-    await db.query(
-      `UPDATE breed_stats
-       SET total_votes = total_votes + 1,
-           upvotes = upvotes + $1,
-           downvotes = downvotes + $2,
-           updated_at = CURRENT_TIMESTAMP
-       WHERE breed_id = $3 AND animal_type = $4`,
-      [voteType === 'like' ? 1 : 0, voteType === 'dislike' ? 1 : 0, breed_id, animal_type]
-    );
-  }
 }
 
 module.exports = { voteOnBreed };

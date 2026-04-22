@@ -2,17 +2,14 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import './SearchForm.css';
 
-function SearchForm({ breeds, categories, onSearch, loading }) {
+function SearchForm({ breeds, onSearch, loading }) {
   const [breedId, setBreedId] = useState('');
-  const [categoryId, setCategoryId] = useState('');
   const [limit, setLimit] = useState(10);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     onSearch({
       breedId,
-      categoryId,
       limit
     });
   };
@@ -31,17 +28,7 @@ function SearchForm({ breeds, categories, onSearch, loading }) {
         </select>
       </label>
 
-      <label className="search-field">
-        <span>Catégorie</span>
-        <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
-          <option value="">Toutes les catégories</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
-            </option>
-          ))}
-        </select>
-      </label>
+
 
       <label className="search-field">
         <span>Nombre de résultats</span>
@@ -65,12 +52,6 @@ SearchForm.propTypes = {
   breeds: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired
-    })
-  ).isRequired,
-  categories: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
       name: PropTypes.string.isRequired
     })
   ).isRequired,

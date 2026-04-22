@@ -5,11 +5,13 @@ const db = require('./db');
  */
 async function insertAnimal(cat) {
   console.log('insertAnimal appelé avec :', cat);
-  if (!cat?.id || !cat?.url) {
+  const imageUrl = cat.url || cat.image;
+  if (!cat?.id || !imageUrl) {
     console.log('Animal ignoré (pas d\'id ou d\'url)');
     return;
   }
-  const breed = cat.breeds?.[0] || {};
+  // Supporte breed depuis cat.breed (objet) ou cat.breeds[0]
+  const breed = cat.breed || (cat.breeds?.[0]) || {};
   try {
     await db.query(
       `INSERT INTO animals (api_id, animal_type, breed_id, breed_name, image_url, weight_metric, life_span, temperament)
@@ -20,7 +22,7 @@ async function insertAnimal(cat) {
         'cat',
         breed.id || null,
         breed.name || null,
-        cat.url,
+        imageUrl,
         breed.weight?.metric || null,
         breed.life_span || null,
         breed.temperament || null

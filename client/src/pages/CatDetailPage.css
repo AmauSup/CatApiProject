@@ -1,0 +1,32 @@
+.cat-detail-page {
+  max-width: 500px;
+  margin: 2rem auto;
+  background: var(--background-secondary, #fff);
+  border-radius: 1rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 2rem;
+  text-align: center;
+}
+
+.cat-detail-img {
+  width: 100%;
+  max-width: 350px;
+  border-radius: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.cat-detail-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.cat-detail-list li {
+  margin-bottom: 0.7rem;
+  font-size: 1.1rem;
+}
+
+.cat-detail-list strong {
+  color: var(--primary, #3a3a3a);
+}

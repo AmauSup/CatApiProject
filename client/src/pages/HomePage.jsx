@@ -6,6 +6,7 @@ import CatCard from "../components/CatCard";
 import likeIcon from "../assets/like-icon.png";
 import dislikeIcon from "../assets/dislike-icon.png";
 import nextIcon from "../assets/next-icon.png";
+import { voteOnCat } from '../services/voteService';
 import "./HomePage.css";
 
 function HomePage() {
@@ -33,15 +34,16 @@ function HomePage() {
       );
       const imgData = await imgRes.json();
 
-      // 4. créer un objet propre
+      // 4. créer un objet propre avec id d'image
       const catProfile = {
-        id: breed.id,
+        id: imgData[0]?.id, // id d'image unique
+        image: imgData[0]?.url || "",
         name: breed.name,
         origin: breed.origin,
         temperament: breed.temperament,
         lifeSpan: breed.life_span,
         weight: breed.weight.metric,
-        image: imgData[0]?.url || "",
+        breed: breed // pour la page détail
       };
 
       setCat(catProfile);
@@ -64,17 +66,32 @@ function HomePage() {
     loadRandomCat();
   }, []);
 
-  const handleLike = () => {
+  const handleLike = async () => {
     setLikes((prev) => prev + 1);
+    if (cat && cat.id) {
+      try {
+        await voteOnCat({ animalId: cat.id, voteType: 'like' });
+      } catch (e) {}
+    }
     loadRandomCat();
   };
 
-  const handleDislike = () => {
+  const handleDislike = async () => {
     setDislikes((prev) => prev + 1);
+    if (cat && cat.id) {
+      try {
+        await voteOnCat({ animalId: cat.id, voteType: 'dislike' });
+      } catch (e) {}
+    }
     loadRandomCat();
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    if (cat && cat.id) {
+      try {
+        await voteOnCat({ animalId: cat.id, voteType: 'skip' });
+      } catch (e) {}
+    }
     loadRandomCat();
   };
 

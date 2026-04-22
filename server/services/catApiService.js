@@ -1,3 +1,25 @@
+// Récupère un chat par race unique (pour tournoi)
+async function getCatsByUniqueBreeds(limit = 8) {
+  const breeds = await fetchBreeds();
+  const selectedBreeds = breeds.sort(() => 0.5 - Math.random()).slice(0, limit);
+  const cats = [];
+  for (const breed of selectedBreeds) {
+    const res = await axios.get(`${CAT_API_BASE_URL}/images/search`, {
+      headers: getAuthHeaders(),
+      params: { breed_id: breed.id, limit: 1, size: 'med', has_breeds: 1 }
+    });
+    if (res.data && res.data[0]) {
+      cats.push({
+        id: res.data[0].id,
+        url: res.data[0].url,
+        breed: breed.name,
+        breedId: breed.id,
+        ...res.data[0]
+      });
+    }
+  }
+  return cats;
+}
 const axios = require('axios');
 
 const CAT_API_BASE_URL = 'https://api.thecatapi.com/v1';
@@ -72,5 +94,6 @@ module.exports = {
   fetchRandomCats,
   fetchBreeds,
   fetchCategories,
-  fetchSearchCats
+  fetchSearchCats,
+  getCatsByUniqueBreeds
 };

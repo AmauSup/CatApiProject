@@ -15,16 +15,13 @@ function Tournois() {
   const fetchCats = async () => {
     try {
       setLoading(true);
-
       const res = await fetch(
         "https://api.thecatapi.com/v1/images/search?limit=2&has_breeds=1"
       );
       const data = await res.json();
-
       if (data.length >= 2) {
         const catDetails1 = await fetchImageDetails(data[0].id);
         const catDetails2 = await fetchImageDetails(data[1].id);
-
         setCat1(catDetails1);
         setCat2(catDetails2);
       }

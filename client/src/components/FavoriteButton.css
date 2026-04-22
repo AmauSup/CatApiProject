@@ -1,0 +1,66 @@
+.favorite-button-wrapper {
+  display: inline-flex;
+}
+
+.favorite-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  border: none;
+  border-radius: 20px;
+  padding: 0 16px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-color);
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: visible;
+}
+
+.favorite-button:hover,
+.favorite-button:focus-visible {
+  background: rgba(255, 214, 10, 0.1);
+  color: #d4a300;
+  outline: none;
+}
+
+.favorite-button:active {
+  background: rgba(255, 214, 10, 0.2);
+}
+
+.favorite-button.active {
+  color: #d4a300;
+}
+
+.favorite-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  display: block;
+}
+
+.favorite-text {
+  display: inline-block;
+}
+
+.favorite-toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  max-width: min(90vw, 320px);
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(239, 68, 68, 0.95);
+  color: #ffffff;
+  font-size: 13px;
+  line-height: 1.3;
+  text-align: center;
+  box-shadow: var(--shadow-medium);
+  pointer-events: none;
+}

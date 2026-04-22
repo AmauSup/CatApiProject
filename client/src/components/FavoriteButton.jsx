@@ -1,10 +1,24 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../services/AuthContext';
+import FullStar from '../assets/full-star-icon.png';
+import EmptyStar from '../assets/star-icon.png';
+import './FavoriteButton.css';
+
 
 export default function FavoriteButton({ animalId }) {
   const { user } = useContext(AuthContext);
   const [isFav, setIsFav] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!error) return undefined;
+
+    const timeoutId = window.setTimeout(() => {
+      setError('');
+    }, 3000);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [error]);
 
   // animalId ici est l'id API (string), il faut trouver l'id numérique
   const handleToggle = async () => {
@@ -35,11 +49,23 @@ export default function FavoriteButton({ animalId }) {
   };
 
   return (
-    <div>
-      <button onClick={handleToggle} style={{marginTop:8}}>
-        {isFav ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+    <div className="favorite-button-wrapper">
+      <button
+        onClick={handleToggle}
+        className={`favorite-button ${isFav ? 'active' : ''}`}
+      >
+        <img
+          src={isFav ? FullStar : EmptyStar}
+          alt="favori"
+          className="favorite-icon"
+        />
+        <span className="favorite-text">Favoris</span>
       </button>
-      {error && <div style={{color:'red'}}>{error}</div>}
+      {error && (
+        <div className="favorite-toast" role="alert" aria-live="assertive">
+          {error}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../services/AuthContext';
 
 // animalId doit être l'id d'image (ex: p2U4ZXgKL)
@@ -6,6 +6,25 @@ export default function FavoriteButton({ animalId }) {
   const { user } = useContext(AuthContext);
   const [isFav, setIsFav] = useState(false);
   const [error, setError] = useState('');
+
+  // Vérifie si déjà favori au chargement
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      try {
+        const resId = await fetch(`http://localhost:5000/api/cats/animal-id?api_id=${animalId}`);
+        const dataId = await resId.json();
+        if (!resId.ok || !dataId.id) return;
+        const numericId = dataId.id;
+        const res = await fetch('http://localhost:5000/api/favorites', {
+          headers: { Authorization: `Bearer ${user.token}` }
+        });
+        if (!res.ok) return;
+        const favs = await res.json();
+        setIsFav(favs.some(fav => fav.id === numericId));
+      } catch {}
+    })();
+  }, [user, animalId]);
 
   // animalId ici est l'id API (string), il faut trouver l'id numérique
   const handleToggle = async () => {
@@ -16,7 +35,6 @@ export default function FavoriteButton({ animalId }) {
     }
     try {
       // Récupère l'id numérique de l'animal
-      // Ici, animalId est déjà l'id d'image unique
       const resId = await fetch(`http://localhost:5000/api/cats/animal-id?api_id=${animalId}`);
       const dataId = await resId.json();
       if (!resId.ok || !dataId.id) throw new Error('Animal non trouvé en base');

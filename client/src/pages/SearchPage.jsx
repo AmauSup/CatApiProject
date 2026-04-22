@@ -16,17 +16,21 @@ import {
 } from '../services/catService';
 import './SearchPage.css';
 
+import { useLocation } from 'react-router-dom';
+
 function SearchPage() {
+  const location = useLocation();
   const [breeds, setBreeds] = useState([]);
-  // const [categories, setCategories] = useState([]);
+  // ...
   const [results, setResults] = useState([]);
-  const [oldResults, setOldResults] = useState([]); // Pour restaurer si plus de nouveaux chats
+  // ...
   const [loadingFormData, setLoadingFormData] = useState(false);
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [error, setError] = useState('');
   const [hasSearched, setHasSearched] = useState(false);
   const [noMoreNewCats, setNoMoreNewCats] = useState(false);
   const lastFilters = useRef(null); // Pour reroll
+
 
   useEffect(() => {
     const loadFilters = async () => {
@@ -45,6 +49,14 @@ function SearchPage() {
 
     loadFilters();
   }, []);
+
+  // Si on arrive depuis la page détail avec des filtres, relance la recherche
+  useEffect(() => {
+    if (location.state?.filters) {
+      handleSearch(location.state.filters);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.state]);
 
 
 
@@ -68,7 +80,7 @@ function SearchPage() {
           data = await searchCats({ ...filters, excludeIds: [...excludeIds, ...uniqueCats.map(c => c.id)] });
         } catch (err) {
           // Si 404, plus de chats à afficher
-          if (err.response && err.response.status === 404) {
+          if (err.response?.status === 404) {
             break;
           } else {
             throw err;
@@ -156,7 +168,7 @@ function SearchPage() {
           )}
           <div className="cat-grid search-results">
             {results.map((cat) => (
-              <CatCard key={cat.id} cat={cat} />
+              <CatCard key={cat.id} cat={cat} filters={lastFilters.current} />
             ))}
           </div>
         </>

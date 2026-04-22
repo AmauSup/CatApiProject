@@ -46,7 +46,20 @@ function SearchPage() {
       setError('');
       setHasSearched(true);
       const data = await searchCats(filters);
-      setResults(data);
+      // Adapter chaque chat pour avoir une propriété image et name (race)
+      const resultsWithImageAndName = data.map(cat => {
+        // La race est dans cat.breeds[0]?.name si présent
+        let name = '';
+        if (cat.breeds && cat.breeds.length > 0) {
+          name = cat.breeds[0].name;
+        }
+        return {
+          ...cat,
+          image: cat.url || cat.image || '',
+          name,
+        };
+      });
+      setResults(resultsWithImageAndName);
     } catch (err) {
       setError(err.message || 'Erreur pendant la recherche.');
       setResults([]);

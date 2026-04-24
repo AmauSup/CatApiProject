@@ -6,12 +6,11 @@ exports.vote = async (req, res) => {
   if (!animal_id || !['like', 'dislike', 'skip'].includes(voteType)) {
     return res.status(400).json({ message: 'Requête invalide' });
   }
-  if (voteType === 'skip') return res.json({ message: 'Image passée' });
   try {
     await voteOnBreed({ animal_id, voteType, user_id });
-    res.json({ message: 'Vote enregistré' });
+    res.json({ message: voteType === 'skip' ? 'Vote blanc enregistré' : 'Vote enregistré' });
   } catch (err) {
-  console.error('Erreur vote:', err); // Ajout du log détaillé
-  res.status(500).json({ message: err.message });
-}
+    console.error('Erreur vote:', err); // Ajout du log détaillé
+    res.status(500).json({ message: err.message });
+  }
 };

@@ -15,18 +15,26 @@ const db = require('./services/db');
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001;
 
-app.use(cors({
-  origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
-  credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  exposedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(
+	cors({
+		// origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
+    origin: [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:5175',
+  'http://localhost:5176'
+],
+		credentials: true,
+		allowedHeaders: ['Content-Type', 'Authorization'],
+		exposedHeaders: ['Content-Type', 'Authorization'],
+	}),
+);
 app.use(express.json());
 
 app.get('/api/health', (req, res) => {
-  res.json({ message: 'API is running' });
+	res.json({ message: 'API is running' });
 });
 
 app.use('/api/cats', catRoutes);
@@ -37,10 +45,12 @@ app.use('/api/favorites', auth, favoriteRoutes);
 
 // Middleware global d'erreur simple pour centraliser les retours d'erreur.
 app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).json({ message: err.message || 'Erreur serveur' });
+	console.error(err);
+	res.status(500).json({
+		message: err.message || 'Erreur serveur',
+	});
 });
 
 app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+	console.log(`Server running on http://localhost:${port}`);
 });

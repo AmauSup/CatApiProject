@@ -25,12 +25,91 @@
   gap: 0.5rem;
 }
 
+/* Lien ou bouton nav générique */
 .navbar-link {
   text-decoration: none;
-  padding: 0.5rem 0.75rem;
-  border-radius: 6px;
+  padding: 0.5rem 0.85rem;
+  border-radius: 7px;
   color: var(--text-color);
-  transition: background-color 0.2s ease;
+  background: rgba(108,99,255,0.07);
+  border: 1.5px solid rgba(108,99,255,0.13);
+  font: inherit;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(108,99,255,0.04);
+}
+.navbar-link:hover, .navbar-link:focus-visible {
+  background: rgba(108,99,255,0.16);
+  border-color: #6c63ff;
+}
+.navbar-link.active {
+  background: var(--primary-color);
+  color: #fff;
+  border-color: var(--primary-color);
+}
+/* Bouton déconnexion spécifique */
+.navbar-link[onClick] {
+  background: #ff4d4f;
+  color: #fff;
+  font-weight: 500;
+  margin-left: 8px;
+  border: 1.5px solid #d9363e;
+  box-shadow: 0 2px 8px rgba(255,77,79,0.10);
+}
+.navbar-link[onClick]:hover, .navbar-link[onClick]:focus-visible {
+  background: #d9363e;
+  color: #fff;
+  border-color: #ff4d4f;
+}
+[data-theme="dark"] .navbar-link {
+  background: rgba(108,99,255,0.13);
+  border: 1.5px solid rgba(108,99,255,0.22);
+}
+[data-theme="dark"] .navbar-link:hover, [data-theme="dark"] .navbar-link:focus-visible {
+  background: rgba(108,99,255,0.22);
+  border-color: #6c63ff;
+}
+[data-theme="dark"] .navbar-link.active {
+  background: #6c63ff;
+  color: #fff;
+  border-color: #6c63ff;
+}
+[data-theme="dark"] .navbar-link[onClick] {
+  background: #ff4d4f;
+  color: #fff;
+  border: 1.5px solid #d9363e;
+}
+[data-theme="dark"] .navbar-link[onClick]:hover, [data-theme="dark"] .navbar-link[onClick]:focus-visible {
+  background: #d9363e;
+  color: #fff;
+  border-color: #ff4d4f;
+}
+.navbar-link:hover, .navbar-link:focus-visible {
+  background: rgba(0,0,0,0.08);
+}
+.navbar-link.active {
+  background: var(--primary-color);
+  color: #fff;
+}
+/* Bouton déconnexion spécifique */
+.navbar-link[onClick] {
+  background: #ff4d4f;
+  color: #fff;
+  font-weight: 500;
+  margin-left: 8px;
+  transition: background 0.2s, color 0.2s;
+}
+.navbar-link[onClick]:hover, .navbar-link[onClick]:focus-visible {
+  background: #d9363e;
+  color: #fff;
+}
+[data-theme="dark"] .navbar-link[onClick] {
+  background: #ff4d4f;
+  color: #fff;
+}
+[data-theme="dark"] .navbar-link[onClick]:hover, [data-theme="dark"] .navbar-link[onClick]:focus-visible {
+  background: #d9363e;
+  color: #fff;
 }
 
 .navbar-link:hover {

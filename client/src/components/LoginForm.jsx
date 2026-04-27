@@ -37,6 +37,7 @@
 
 
 import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../services/AuthContext';
 import './AuthForm.css';
 
@@ -45,22 +46,21 @@ export default function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-
     try {
       const res = await fetch('http://localhost:5050/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
-
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Erreur de connexion');
-
       login(data.user, data.token);
+      navigate('/');
     } catch (err) {
       setError(err.message);
     }

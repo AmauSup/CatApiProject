@@ -149,8 +149,8 @@ function CatDetailPage() {
           <img src={nextIcon} alt="Next" className="button-icon" />
           <span>Next</span>
         </button>
-        {/* Robustesse : n'affiche le bouton favori que si le chat a un id */}
-        {cat.id && <FavoriteButton animalId={cat.id} />}
+        {/* Favoris aligné avec les autres boutons */}
+        {cat.id && <div style={{marginLeft: '8px'}}><FavoriteButton animalId={cat.id} /></div>}
       </div>
     </div>
   );

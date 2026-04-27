@@ -144,12 +144,19 @@ function Tournois() {
         <div style={{display:'flex', flexDirection:'column', gap:12, alignItems:'center'}}>
           <h2 style={{marginBottom:0}}>Aucun tournoi en cours</h2>
           <p style={{marginTop:0, color:'#888'}}>Clique sur un bouton pour commencer un tournoi</p>
-          <button className="start-btn" onClick={handleStart} disabled={loading}>
-            {loading ? "Chargement..." : "Lancer un tournoi (8 races aléatoires)"}
-          </button>
-          <button className="start-btn" onClick={handleStartAllBreeds} disabled={loading}>
-            {loading ? "Chargement..." : "Tournoi toutes les races (long)"}
-          </button>
+          {!loading && (
+            <>
+              <button className="start-btn" onClick={handleStart}>
+                Lancer un tournoi (8 races aléatoires)
+              </button>
+              <button className="start-btn" onClick={handleStartAllBreeds}>
+                Tournoi toutes les races (long)
+              </button>
+            </>
+          )}
+          {loading && (
+            <button className="start-btn" disabled style={{minWidth:260}}>Chargement...</button>
+          )}
         </div>
       )}
 
@@ -209,32 +216,27 @@ function Tournois() {
       )}
 
       {tournoi && !currentMatch && (
-        <div className="tournoi-finished">
+        <div className="tournament-winner">
           <button className="quit-btn" onClick={handleQuit} style={{position:'absolute',top:20,right:20}}>Quitter le tournoi</button>
-          <h2>Tournoi terminé !</h2>
-          <p>Vainqueur : {tournoi.rounds.at(-1)?.matches?.[0]?.winner?.breed || "?"}</p>
-          <img
-            src={tournoi.rounds.at(-1)?.matches?.[0]?.winner?.url}
-            alt="Vainqueur"
-            className="cat-image"
-            style={{ maxWidth: 300 }}
-          />
-          <button className="bracket-btn" onClick={handleShowBracket} disabled={loading}>
-            Voir l'arborescence
-          </button>
-          <button className="restart-btn" onClick={handleStart} disabled={loading}>
-            Rejouer un tournoi
-          </button>
+          <h2>🏆 Gagnant du tournoi !</h2>
+          <div className="winner-card">
+            <img src={tournoi.rounds.at(-1)?.matches?.[0]?.winner?.url} alt="Vainqueur" />
+            <div className="winner-name">{tournoi.rounds.at(-1)?.matches?.[0]?.winner?.breed || "?"}</div>
+          </div>
+          <div className="tournament-winner-actions">
+            <button className="bracket-button" onClick={handleShowBracket} disabled={loading}>Arborescence</button>
+            <button className="restart-button" onClick={handleStart} disabled={loading}>Rejouer</button>
+          </div>
         </div>
       )}
 
       {showBracket && bracket.length > 0 && (
-        <div className="bracket-section">
-          <h2>Arborescence du tournoi</h2>
-          <div className="bracket-raw">
+        <div className="tournament-bracket">
+          <h3>Arborescence du tournoi</h3>
+          <div className="bracket-tree">
             {bracket.map((round, idx) => (
               <div key={idx} className="bracket-round">
-                <h3>{round.name}</h3>
+                <h4>{round.name}</h4>
                 {round.matches.map((m, i) => (
                   <div key={m.id} className="bracket-match">
                     <span>{m.cat1?.breed} {m.cat2 ? `vs ${m.cat2?.breed}` : ''}</span>

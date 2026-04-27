@@ -1,3 +1,93 @@
+.close-bracket-btn {
+  margin: 2rem auto 0 auto;
+  display: block;
+  padding: 0.7rem 2.2rem;
+  border: none;
+  border-radius: 8px;
+  background: #6c63ff;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(108,99,255,0.10);
+  transition: background 0.2s, color 0.2s;
+}
+.close-bracket-btn:hover, .close-bracket-btn:focus-visible {
+  background: #554ee0;
+  color: #fff;
+}
+.tournament-winner {
+  text-align: center;
+  margin-top: 2rem;
+  background: #f7f7ff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(108,99,255,0.08);
+  padding: 2rem 1rem 1.5rem 1rem;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.winner-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1rem 0 0.5rem 0;
+}
+.winner-card img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #6c63ff;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 2px 8px rgba(108,99,255,0.10);
+}
+.winner-name {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #554ee0;
+  margin-top: 0.2rem;
+}
+.tournament-winner-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 1rem;
+}
+.tournament-winner .bracket-button,
+.tournament-winner .restart-button {
+  padding: 0.6rem 1.3rem;
+  border: none;
+  border-radius: 8px;
+  background: #6c63ff;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(108,99,255,0.10);
+  transition: background 0.2s, color 0.2s;
+}
+.tournament-winner .bracket-button:hover,
+.tournament-winner .restart-button:hover {
+  background: #554ee0;
+}
+.tournament-bracket {
+  margin: 2rem auto;
+  max-width: 700px;
+  background: #f7f7ff;
+  border-radius: 16px;
+  padding: 1.5rem 1rem 2rem 1rem;
+  box-shadow: 0 2px 12px rgba(108,99,255,0.08);
+}
+.bracket-tree {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 32px;
+  flex-wrap: wrap;
+}
 .quit-btn {
   position: absolute;
   top: 20px;

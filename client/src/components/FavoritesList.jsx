@@ -1,7 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../services/AuthContext';
 
 export default function FavoritesList() {
+    const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const [favorites, setFavorites] = useState([]);
   const [error, setError] = useState('');
@@ -49,9 +51,9 @@ export default function FavoritesList() {
       {favorites.length === 0 ? (
         <p>Aucun favori.</p>
       ) : (
-        <ul>
+        <ul style={{padding:0}}>
           {favorites.map(cat => (
-            <li key={cat.id} style={{marginBottom:16,display:'flex',alignItems:'center'}}>
+            <li key={cat.id} style={{marginBottom:16,display:'flex',alignItems:'center',cursor:'pointer',background:'#f7f7ff',borderRadius:10,padding:'8px 8px 8px 0'}} onClick={() => navigate(`/cats/${cat.id}`)}>
               <img src={cat.image_url} alt={cat.breed_name || 'Chat'} width={80} style={{verticalAlign:'middle',borderRadius:8}} />
               <div style={{marginLeft:12,flex:1}}>
                 <div><strong>{cat.breed_name || 'Chat'}</strong></div>
@@ -62,7 +64,7 @@ export default function FavoritesList() {
                   {cat.weight_metric && <span><b>Poids:</b> {cat.weight_metric} kg</span>}
                 </div>
               </div>
-              <button onClick={() => handleRemove(cat)} style={{marginLeft:16}}>Retirer</button>
+              <button className="remove-favorite-btn" onClick={e => {e.stopPropagation(); handleRemove(cat);}} style={{marginLeft:16}}>Retirer</button>
             </li>
           ))}
         </ul>

@@ -44,15 +44,12 @@ app.use('/api/auth', authRoutes);
 app.use('/api/votes', voteRoutes);
 app.use('/api/favorites', auth, favoriteRoutes);
 
+
 app.use('/api/tournoi', tournoiRoutes);
 
-// Middleware global d'erreur simple pour centraliser les retours d'erreur.
-app.use((err, req, res, next) => {
-	console.error(err);
-	res.status(500).json({
-		message: err.message || 'Erreur serveur',
-	});
-});
+// Middleware global d'erreur centralisé
+const errorHandler = require('./middlewares/errorHandler');
+app.use(errorHandler);
 
 app.listen(port, () => {
 	console.log(`Server running on http://localhost:${port}`);

@@ -1,3 +1,5 @@
+// NOTE : Les réponses API ne suivent pas partout le format { success, message, data } pour ne pas casser le frontend existant.
+// Pour toute évolution, il est recommandé d’utiliser ce format pour plus de clarté et de cohérence.
 const { voteOnBreed } = require('../services/voteService');
 
 exports.vote = async (req, res) => {

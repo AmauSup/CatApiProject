@@ -2,7 +2,11 @@ openapi: 3.0.3
 info:
   title: Cat API Project
   version: 1.0.0
-  description: API REST pour l'application Cat API (Express + PostgreSQL)
+  description: |
+    API REST pour l'application Cat API (Express + PostgreSQL)
+    
+    ## Note sur la route `/votes`
+    Il n’existe pas de table `votes` dans la base. La route `/votes` met à jour les compteurs de la table `breed_stats` (votes par race), mais ne stocke pas chaque vote individuellement.
 servers:
   - url: http://localhost:5050/api
 paths:

@@ -1,0 +1,19 @@
+@startuml
+actor Utilisateur
+participant "Frontend (React/Vite)" as FE
+participant "API Backend (Node.js/Express)" as BE
+participant "DB PostgreSQL (Neon)" as DB
+participant "TheCatAPI" as CATAPI
+
+Utilisateur -> FE : Utilise l'application (SPA)
+FE -> BE : Appels API REST (auth, chats, favoris, tournoi)
+BE -> DB : Requêtes SQL (utilisateurs, animaux, favoris, stats)
+BE -> CATAPI : Appels API externes (données chats)
+BE <-> FE : JWT Auth (login/signup, token)
+
+note right of BE
+- Vérification JWT sur routes protégées
+- Gestion des erreurs centralisée
+end note
+
+@enduml

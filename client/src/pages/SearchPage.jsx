@@ -23,6 +23,7 @@ function SearchPage() {
   const [breeds, setBreeds] = useState([]);
   // ...
   const [results, setResults] = useState([]);
+  const [oldResults, setOldResults] = useState([]);
   // ...
   const [loadingFormData, setLoadingFormData] = useState(false);
   const [loadingSearch, setLoadingSearch] = useState(false);
@@ -82,6 +83,11 @@ function SearchPage() {
           // Si 404, plus de chats à afficher
           if (err.response?.status === 404) {
             break;
+          } else if (err.response?.status === 429) {
+            setError('Trop de requêtes envoyées au service de chats. Merci de patienter une minute avant de réessayer.');
+            setResults([]);
+            setLoadingSearch(false);
+            return;
           } else {
             throw err;
           }

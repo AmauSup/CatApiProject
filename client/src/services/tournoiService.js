@@ -1,6 +1,8 @@
+
 import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/tournoi';
+
 
 const tournoiService = {
   startTournoi: async (breedIds) => {
@@ -18,6 +20,9 @@ const tournoiService = {
   getBracket: async () => {
     const res = await axios.get(`${API_URL}/bracket`);
     return res.data;
+  },
+  quitTournoi: async () => {
+    await axios.delete(`${API_URL}`);
   }
 };
 

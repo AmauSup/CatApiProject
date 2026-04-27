@@ -1,3 +1,6 @@
+function deleteTournoi() {
+  tournoiState = null;
+}
 // Service pour la logique du tournoi
 const catApiService = require('./catApiService');
 
@@ -110,5 +113,6 @@ module.exports = {
   startTournoi,
   getTournoi,
   voteMatch,
-  getBracket
+  getBracket,
+  deleteTournoi
 };

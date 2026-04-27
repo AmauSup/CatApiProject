@@ -115,8 +115,26 @@ function Tournois() {
   // Calcul correct du nombre total de rounds à partir du nombre de participants
   const totalRounds = tournoi?.participants ? Math.ceil(Math.log2(tournoi.participants.length)) : 0;
 
+  // Quitter le tournoi : reset et retour accueil
+  const handleQuit = async () => {
+    setLoading(true);
+    try {
+      await tournoiService.quitTournoi();
+    } catch (e) {}
+    setTournoi(null);
+    setBracket([]);
+    setShowBracket(false);
+    setError("");
+    setVoted(false);
+    setLoading(false);
+    // On reste sur la page tournoi, pas de navigation automatique
+  };
+
   return (
-    <div className="tournoi-page">
+    <div className="tournoi-page" style={{position:'relative'}}>
+      {tournoi && (
+        <button className="quit-btn" onClick={handleQuit} style={{position:'absolute',top:20,right:20,zIndex:10}}>Quitter le tournoi</button>
+      )}
       <h1 className="tournoi-title">Tournoi des races de chats</h1>
       <p className="tournoi-subtitle">Vote pour ton chat préféré à chaque tour !</p>
 
@@ -137,6 +155,7 @@ function Tournois() {
 
       {tournoi && currentMatch && (
         <>
+          <button className="quit-btn" onClick={handleQuit} style={{position:'absolute',top:20,right:20}}>Quitter le tournoi</button>
           <div style={{display:'flex', flexDirection:'column', alignItems:'center', marginBottom:12}}>
             <h2 className="tournoi-round" style={{marginBottom:4}}>
               {roundName}
@@ -191,6 +210,7 @@ function Tournois() {
 
       {tournoi && !currentMatch && (
         <div className="tournoi-finished">
+          <button className="quit-btn" onClick={handleQuit} style={{position:'absolute',top:20,right:20}}>Quitter le tournoi</button>
           <h2>Tournoi terminé !</h2>
           <p>Vainqueur : {tournoi.rounds.at(-1)?.matches?.[0]?.winner?.breed || "?"}</p>
           <img

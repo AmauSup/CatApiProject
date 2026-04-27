@@ -49,7 +49,7 @@ function HomePage() {
       setCat(catProfile);
 
       // Envoi au backend pour insertion dans la BDD
-      fetch('http://localhost:5000/api/cats/animals', {
+      fetch('http://localhost:5050/api/cats/animals', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(catProfile)

@@ -25,11 +25,11 @@ export default function FavoriteButton({ animalId }) {
     if (!user) return;
     (async () => {
       try {
-        const resId = await fetch(`http://localhost:5000/api/cats/animal-id?api_id=${animalId}`);
+        const resId = await fetch(`http://localhost:5050/api/cats/animal-id?api_id=${animalId}`);
         const dataId = await resId.json();
         if (!resId.ok || !dataId.id) return;
         const numericId = dataId.id;
-        const res = await fetch('http://localhost:5000/api/favorites', {
+        const res = await fetch('http://localhost:5050/api/favorites', {
           headers: { Authorization: `Bearer ${user.token}` }
         });
         if (!res.ok) return;
@@ -48,11 +48,11 @@ export default function FavoriteButton({ animalId }) {
     }
     try {
       // Récupère l'id numérique de l'animal
-      const resId = await fetch(`http://localhost:5000/api/cats/animal-id?api_id=${animalId}`);
+      const resId = await fetch(`http://localhost:5050/api/cats/animal-id?api_id=${animalId}`);
       const dataId = await resId.json();
       if (!resId.ok || !dataId.id) throw new Error('Animal non trouvé en base');
       const numericId = dataId.id;
-      const res = await fetch('http://localhost:5000/api/favorites', {
+      const res = await fetch('http://localhost:5050/api/favorites', {
         method: isFav ? 'DELETE' : 'POST',
         headers: {
           'Content-Type': 'application/json',

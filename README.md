@@ -38,7 +38,7 @@ npm install
 Créer un fichier `client/.env` avec :
 
 ```env
-VITE_API_BASE_URL=http://localhost:5000/api/cats
+VITE_API_BASE_URL=http://localhost:5050/api/cats
 ```
 
 Lancer le frontend :

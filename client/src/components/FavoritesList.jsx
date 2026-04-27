@@ -9,7 +9,7 @@ export default function FavoritesList() {
   // Rafraîchit la liste après suppression
   const fetchFavorites = () => {
     if (!user) return;
-    fetch('http://localhost:5000/api/favorites', {
+    fetch('http://localhost:5050/api/favorites', {
       headers: { Authorization: `Bearer ${user.token}` }
     })
       .then(res => res.json())
@@ -25,7 +25,7 @@ export default function FavoritesList() {
   const handleRemove = async (cat) => {
     setError('');
     try {
-      const res = await fetch('http://localhost:5000/api/favorites', {
+      const res = await fetch('http://localhost:5050/api/favorites', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

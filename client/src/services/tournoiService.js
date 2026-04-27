@@ -1,7 +1,7 @@
 
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/tournoi';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5050/api/tournoi';
 
 
 const tournoiService = {

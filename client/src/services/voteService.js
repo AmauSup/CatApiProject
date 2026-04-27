@@ -1,12 +1,12 @@
 // Envoie un vote (like/dislike/skip) pour un animal donné
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_VOTE_URL || 'http://localhost:5000/api/votes';
+const API_BASE_URL = import.meta.env.VITE_API_VOTE_URL || 'http://localhost:5050/api/votes';
 
 
 // Récupère l'id numérique à partir de l'id d'image
 async function getNumericAnimalId(apiId) {
-  const API_CAT_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api/cats';
+  const API_CAT_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5050/api/cats';
   const res = await axios.get(`${API_CAT_URL}/animal-id`, { params: { api_id: apiId } });
   return res.data.id;
 }

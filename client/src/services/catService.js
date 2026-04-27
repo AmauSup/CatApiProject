@@ -6,7 +6,7 @@ export async function getCatById(id) {
 import axios from 'axios';
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api/cats';
+  import.meta.env.VITE_API_BASE_URL || 'http://localhost:5050/api/cats';
 
 const api = axios.create({
   baseURL: API_BASE_URL

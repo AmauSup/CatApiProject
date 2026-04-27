@@ -39,7 +39,7 @@ function CatDetailPage() {
   async function ensureCatInDb() {
     if (!cat) return;
     try {
-      await fetch('http://localhost:5000/api/cats/animals', {
+      await fetch('http://localhost:5050/api/cats/animals', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

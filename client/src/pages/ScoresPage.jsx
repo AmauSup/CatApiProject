@@ -11,7 +11,7 @@ function ScoresPage() {
       setLoading(true);
       setError('');
       try {
-        const res = await fetch('http://localhost:5000/api/cats/breed-stats');
+        const res = await fetch('http://localhost:5050/api/cats/breed-stats');
         if (!res.ok) throw new Error('Erreur API');
         const data = await res.json();
         setStats(data);

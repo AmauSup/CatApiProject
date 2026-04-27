@@ -1,0 +1,19 @@
+@startuml
+actor User
+participant "Frontend (React)" as FE
+participant "Backend (Express)" as BE
+participant "DB (PostgreSQL)" as DB
+
+User -> FE : Lance tournoi
+FE -> BE : GET /api/cats/tournoi
+BE -> DB : SELECT random animals
+DB --> BE : 2 animaux
+BE -> FE : 2 animaux
+FE -> User : Affiche duel
+User -> FE : Vote pour un chat
+FE -> BE : POST /api/votes {animalId, score}
+BE -> DB : INSERT INTO votes
+DB --> BE : OK
+BE -> FE : 201 Created
+FE -> User : Affiche résultat
+@enduml

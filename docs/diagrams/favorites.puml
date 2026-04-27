@@ -1,0 +1,20 @@
+@startuml
+actor User
+participant "Frontend (React)" as FE
+participant "Backend (Express)" as BE
+participant "DB (PostgreSQL)" as DB
+
+User -> FE : Clique sur Favori
+FE -> BE : POST /api/favorites {animalId}
+BE -> DB : INSERT INTO favorites
+DB --> BE : OK
+BE -> FE : 201 Created
+FE -> User : Met à jour l'UI
+
+User -> FE : Affiche favoris
+FE -> BE : GET /api/favorites
+BE -> DB : SELECT favorites WHERE user_id
+DB --> BE : Liste favoris
+BE -> FE : Liste favoris
+FE -> User : Affiche favoris
+@enduml

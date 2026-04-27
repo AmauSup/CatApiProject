@@ -1,0 +1,272 @@
+openapi: 3.0.3
+info:
+  title: Cat API Project
+  version: 1.0.0
+  description: API REST pour l'application Cat API (Express + PostgreSQL)
+servers:
+  - url: http://localhost:5050/api
+paths:
+  /cats/random:
+    get:
+      summary: Obtenir des chats aléatoires
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+          description: Nombre de chats à retourner
+      responses:
+        '200':
+          description: Liste de chats aléatoires
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Animal'
+  /cats/search:
+    get:
+      summary: Rechercher des chats
+      parameters:
+        - in: query
+          name: breedId
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: categoryId
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+      responses:
+        '200':
+          description: Résultats de la recherche
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Animal'
+  /cats/breeds:
+    get:
+      summary: Lister les races de chats
+      responses:
+        '200':
+          description: Liste des races
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BreedStats'
+  /cats/categories:
+    get:
+      summary: Lister les catégories de chats
+      responses:
+        '200':
+          description: Liste des catégories
+  /auth/login:
+    post:
+      summary: Authentification utilisateur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: JWT Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+  /auth/signup:
+    post:
+      summary: Inscription utilisateur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: Utilisateur créé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /favorites:
+    get:
+      summary: Lister les favoris de l'utilisateur
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Liste des favoris
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Favorite'
+    post:
+      summary: Ajouter un favori
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                animalId:
+                  type: integer
+      responses:
+        '201':
+          description: Favori ajouté
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Favorite'
+    delete:
+      summary: Supprimer un favori
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: animalId
+          schema:
+            type: integer
+          required: true
+      responses:
+        '204':
+          description: Favori supprimé
+  /votes:
+    post:
+      summary: Voter pour un chat
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                animalId:
+                  type: integer
+                score:
+                  type: integer
+      responses:
+        '201':
+          description: Vote enregistré
+    get:
+      summary: Lister les votes de l'utilisateur
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Liste des votes
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Animal:
+      type: object
+      properties:
+        id:
+          type: integer
+        api_id:
+          type: string
+        animal_type:
+          type: string
+        breed_id:
+          type: string
+        breed_name:
+          type: string
+        image_url:
+          type: string
+        weight_metric:
+          type: string
+        life_span:
+          type: string
+        temperament:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        email:
+          type: string
+        password_hash:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    Favorite:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        animal_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+    BreedStats:
+      type: object
+      properties:
+        id:
+          type: integer
+        breed_id:
+          type: string
+        breed_name:
+          type: string
+        animal_type:
+          type: string
+        total_votes:
+          type: integer
+        upvotes:
+          type: integer
+        downvotes:
+          type: integer
+        top1_count:
+          type: integer
+        updated_at:
+          type: string
+          format: date-time

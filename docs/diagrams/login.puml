@@ -1,0 +1,14 @@
+@startuml
+actor User
+participant "Frontend (React)" as FE
+participant "Backend (Express)" as BE
+participant "DB (PostgreSQL)" as DB
+
+User -> FE : Saisit login/password
+FE -> BE : POST /api/auth/login {email, password}
+BE -> DB : SELECT user WHERE email
+DB --> BE : user/password hash
+BE -> BE : Vérifie le hash
+BE -> FE : JWT token (si OK)
+FE -> User : Stocke le token, redirige
+@enduml

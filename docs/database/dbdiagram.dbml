@@ -1,0 +1,50 @@
+Table users {
+  id serial [primary key]
+  username varchar(50) [not null, unique]
+  email varchar(100) [not null, unique]
+  password_hash text
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+}
+
+Table animals {
+  id serial [primary key]
+  api_id varchar(100) [not null]
+  animal_type varchar(10) [not null]
+  breed_id varchar(100)
+  breed_name varchar(100)
+  image_url text [not null]
+  weight_metric varchar(50)
+  life_span varchar(50)
+  temperament text
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  indexes {
+    (breed_name),
+    (animal_type)
+  }
+  unique [api_id, animal_type]
+}
+
+Table favorites {
+  id serial [primary key]
+  user_id int [not null, ref: > users.id]
+  animal_id int [not null, ref: > animals.id]
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  unique [user_id, animal_id]
+  indexes {
+    (user_id),
+    (animal_id)
+  }
+}
+
+Table breed_stats {
+  id serial [primary key]
+  breed_id varchar(100) [not null]
+  breed_name varchar(100) [not null]
+  animal_type varchar(10) [not null]
+  total_votes int [not null, default: 0]
+  upvotes int [not null, default: 0]
+  downvotes int [not null, default: 0]
+  top1_count int [not null, default: 0]
+  updated_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  unique [breed_id, animal_type]
+}

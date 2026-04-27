@@ -7,6 +7,7 @@ const voteRoutes = require('./routes/voteRoutes');
 const breedStatsRoutes = require('./routes/breedStatsRoutes');
 const favoriteRoutes = require('./routes/favoriteRoutes');
 const authRoutes = require('./routes/authRoutes');
+const tournoiRoutes = require('./routes/tournoiRoutes');
 const auth = require('./middlewares/auth');
 
 // Connexion à la base de données PostgreSQL (Neon)
@@ -34,6 +35,8 @@ app.use('/api/cats', breedStatsRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/votes', voteRoutes);
 app.use('/api/favorites', auth, favoriteRoutes);
+
+app.use('/api/tournoi', tournoiRoutes);
 
 // Middleware global d'erreur simple pour centraliser les retours d'erreur.
 app.use((err, req, res, next) => {

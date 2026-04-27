@@ -6,7 +6,8 @@ export default function FavoritesList() {
   const [favorites, setFavorites] = useState([]);
   const [error, setError] = useState('');
 
-  useEffect(() => {
+  // Rafraîchit la liste après suppression
+  const fetchFavorites = () => {
     if (!user) return;
     fetch('http://localhost:5000/api/favorites', {
       headers: { Authorization: `Bearer ${user.token}` }
@@ -14,7 +15,30 @@ export default function FavoritesList() {
       .then(res => res.json())
       .then(data => setFavorites(data))
       .catch(() => setError('Erreur chargement favoris'));
+  };
+
+  useEffect(() => {
+    fetchFavorites();
+    // eslint-disable-next-line
   }, [user]);
+
+  const handleRemove = async (cat) => {
+    setError('');
+    try {
+      const res = await fetch('http://localhost:5000/api/favorites', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`
+        },
+        body: JSON.stringify({ animal_id: cat.id })
+      });
+      if (!res.ok) throw new Error('Erreur suppression favori');
+      fetchFavorites();
+    } catch (e) {
+      setError(e.message);
+    }
+  };
 
   if (!user) return <div>Connecte-toi pour voir tes favoris.</div>;
   if (error) return <div style={{color:'red'}}>{error}</div>;
@@ -27,9 +51,18 @@ export default function FavoritesList() {
       ) : (
         <ul>
           {favorites.map(cat => (
-            <li key={cat.id}>
-              <img src={cat.image_url} alt={cat.breed_name || 'Chat'} width={80} style={{verticalAlign:'middle'}} />
-              <span style={{marginLeft:8}}>{cat.breed_name || 'Chat'} (ID: {cat.id})</span>
+            <li key={cat.id} style={{marginBottom:16,display:'flex',alignItems:'center'}}>
+              <img src={cat.image_url} alt={cat.breed_name || 'Chat'} width={80} style={{verticalAlign:'middle',borderRadius:8}} />
+              <div style={{marginLeft:12,flex:1}}>
+                <div><strong>{cat.breed_name || 'Chat'}</strong></div>
+                <div style={{fontSize:'0.95em',color:'#555'}}>
+                  {cat.temperament && <span><b>Tempérament:</b> {cat.temperament} <br/></span>}
+                  {cat.origin && <span><b>Origine:</b> {cat.origin} <br/></span>}
+                  {cat.life_span && <span><b>Espérance de vie:</b> {cat.life_span} ans <br/></span>}
+                  {cat.weight_metric && <span><b>Poids:</b> {cat.weight_metric} kg</span>}
+                </div>
+              </div>
+              <button onClick={() => handleRemove(cat)} style={{marginLeft:16}}>Retirer</button>
             </li>
           ))}
         </ul>

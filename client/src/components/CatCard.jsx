@@ -2,26 +2,31 @@ import PropTypes from "prop-types";
 import { useNavigate } from 'react-router-dom';
 import "./CatCard.css";
 
-function CatCard({ cat }) {
+
+function CatCard({ cat, from, filters }) {
   const navigate = useNavigate();
   if (!cat) return null;
 
-  const formatLifeSpan = (lifeSpan) => {
-    if (!lifeSpan) return "";
-    const parts = lifeSpan.split(" - ").map(Number);
-    if (parts.length === 2) {
-      const [min, max] = parts;
-      return `${min} - ${max} ans`;
-    }
-    return `${lifeSpan} ans`;
-  };
+  // ...
 
   const handleClick = () => {
-    navigate(`/cat/${cat.id}`, { state: { breed: cat.breed } });
+    navigate(`/cat/${cat.id}`, {
+      state: {
+        breed: cat.breed,
+        from: from || (globalThis.location.pathname === '/search' ? 'search' : 'home'),
+        filters: filters || null,
+      },
+    });
   };
 
   return (
-    <article className="cat-card" style={{ cursor: 'pointer' }} onClick={handleClick}>
+    <button
+      className="cat-card"
+      style={{ cursor: 'pointer', border: 'none', background: 'none', padding: 0 }}
+      onClick={handleClick}
+      tabIndex={0}
+      aria-label={`Voir le détail du chat ${cat.name}`}
+    >
       <img
         className="cat-card-image"
         src={cat.image}
@@ -31,7 +36,7 @@ function CatCard({ cat }) {
       <div className="cat-card-overlay">
         <h2>Race : {cat.name}</h2>
       </div>
-    </article>
+    </button>
   );
 }
 
@@ -45,6 +50,8 @@ CatCard.propTypes = {
     weight: PropTypes.string,
     image: PropTypes.string,
   }).isRequired,
+  from: PropTypes.string,
+  filters: PropTypes.object,
 };
 
 export default CatCard;

@@ -96,9 +96,18 @@ function CatDetailPage() {
       setActionLoading(false);
     }
   };
-  // Flèche retour
+  // Flèche retour intelligente
   const handleBack = () => {
-    navigate('/', { state: { cat } });
+    // Si on vient d'une recherche, retourne à la recherche avec les filtres
+    if (location.state?.from === 'search') {
+      navigate('/search', { state: { filters: location.state?.filters || null } });
+    } else if (location.state?.from === 'home') {
+      // Si on vient de l'accueil, retourne à l'accueil avec le chat courant
+      navigate('/', { state: { cat } });
+    } else {
+      // Sinon, retour navigateur
+      navigate(-1);
+    }
   };
 
   if (loading) return <p>Chargement...</p>;
@@ -112,7 +121,7 @@ function CatDetailPage() {
     <div className="cat-detail-page" style={{ position: 'relative' }}>
       {/* Flèche retour */}
       <button className="cat-detail-back" onClick={handleBack} title="Retour">
-        ←
+        ← Retour
       </button>
       <h2>Détail du chat</h2>
       <img src={cat.url || cat.image} alt={breed?.name || cat.id} className="cat-detail-img" />
@@ -140,7 +149,8 @@ function CatDetailPage() {
           <img src={nextIcon} alt="Next" className="button-icon" />
           <span>Next</span>
         </button>
-        <FavoriteButton animalId={cat.id} />
+        {/* Robustesse : n'affiche le bouton favori que si le chat a un id */}
+        {cat.id && <FavoriteButton animalId={cat.id} />}
       </div>
     </div>
   );

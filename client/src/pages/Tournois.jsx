@@ -1,128 +1,233 @@
 import { useEffect, useState } from "react";
+import tournoiService from "../services/tournoiService";
 import "./Tournois.css";
 
-function Tournois() {
-  const [cat1, setCat1] = useState(null);
-  const [cat2, setCat2] = useState(null);
-  const [loading, setLoading] = useState(true);
+// Liste des races (id)
+const ALL_BREEDS = [
+  "abys","aege","abob","acur","asho","awir","amau","amis","bali","bamb","beng","birm","bomb","bslo","bsho","bure","buri","cspa","ctif","char","chau","chee","csho","crex","cymr","cypr","drex","dons","lihu","emau","ebur","esho","hbro","hima","jbob","java","khao","kora","kuri","lape","mcoo","mala","manx","munc","nebe","norw","ocic","orie","pers","pixi","raga","ragd","rblu","sava","sfol","srex","siam","sibe","sing","snow","soma","sphy","tonk","toyg","tang","tvan","ycho"
+];
 
-  const fetchImageDetails = async (imageId) => {
-    const res = await fetch(`https://api.thecatapi.com/v1/images/${imageId}`);
-    const data = await res.json();
-    return data;
+function Tournois() {
+  const [tournoi, setTournoi] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [voted, setVoted] = useState(false);
+  const [showBracket, setShowBracket] = useState(false);
+  const [bracket, setBracket] = useState([]);
+
+  // Tournoi normal (8 races aléatoires)
+  const handleStart = async () => {
+    setLoading(true);
+    setError("");
+    setVoted(false);
+    setShowBracket(false);
+    try {
+      const data = await tournoiService.startTournoi();
+      setTournoi(data);
+    } catch (e) {
+      setError("Erreur lors du lancement du tournoi");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const fetchCats = async () => {
+  // Tournoi toutes les races
+  const handleStartAllBreeds = async () => {
+    setLoading(true);
+    setError("");
+    setVoted(false);
+    setShowBracket(false);
     try {
-      setLoading(true);
+      const data = await tournoiService.startTournoi(ALL_BREEDS);
+      setTournoi(data);
+    } catch (e) {
+      setError("Erreur lors du lancement du tournoi toutes races");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      const res = await fetch(
-        "https://api.thecatapi.com/v1/images/search?limit=2&has_breeds=1"
-      );
-      const data = await res.json();
+  // Récupère l'état du tournoi
+  const fetchTournoi = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const data = await tournoiService.getTournoi();
+      setTournoi(data);
+    } catch (e) {
+      setError("Erreur lors de la récupération du tournoi");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      if (data.length >= 2) {
-        const catDetails1 = await fetchImageDetails(data[0].id);
-        const catDetails2 = await fetchImageDetails(data[1].id);
+  // Vote pour un chat dans le match courant
+  const handleVote = async (matchId, winnerId) => {
+    setLoading(true);
+    setError("");
+    try {
+      await tournoiService.voteMatch(matchId, winnerId);
+      setVoted(true);
+      await fetchTournoi();
+    } catch (e) {
+      setError("Erreur lors du vote");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        setCat1(catDetails1);
-        setCat2(catDetails2);
-      }
-    } catch (error) {
-      console.error("Erreur API :", error);
+  // Affiche l'arborescence du tournoi
+  const handleShowBracket = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const data = await tournoiService.getBracket();
+      setBracket(data);
+      setShowBracket(true);
+    } catch (e) {
+      setError("Erreur lors de la récupération de l'arborescence");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchCats();
+    fetchTournoi();
+    // eslint-disable-next-line
   }, []);
 
-  const formatLifeSpan = (lifeSpan) => {
-    if (!lifeSpan) return "";
-
-    const parts = lifeSpan.split(" - ").map(Number);
-
-    if (parts.length === 2) {
-      const [min, max] = parts;
-      return `${min} - ${max} ans`;
-    }
-
-    return `${lifeSpan} ans`;
+  // Trouve le match courant (non joué) du round actuel
+  const getCurrentMatch = () => {
+    if (!tournoi || !tournoi.rounds) return null;
+    const round = tournoi.rounds[tournoi.currentRound];
+    if (!round) return null;
+    return round.matches.find((m) => !m.winner);
   };
 
-  const getBreedInfo = (cat) => {
-    const breed = cat?.breeds?.[0];
+  const currentMatch = getCurrentMatch();
 
-    return {
-      name: breed?.name || "",
-      weight: breed?.weight?.metric || "",
-      lifeSpan: formatLifeSpan(breed?.life_span),
-      temperament: breed?.temperament || "",
-    };
-  };
-
-  const breed1 = getBreedInfo(cat1);
-  const breed2 = getBreedInfo(cat2);
+  // Réinitialise voted à false à chaque nouveau match
+  useEffect(() => {
+    setVoted(false);
+  }, [tournoi?.currentRound, currentMatch?.id]);
+  const roundName = tournoi?.rounds?.[tournoi?.currentRound]?.name;
+  const currentRoundNumber = tournoi && tournoi.rounds ? (tournoi.currentRound + 1) : 0;
+  // Calcul correct du nombre total de rounds à partir du nombre de participants
+  const totalRounds = tournoi?.participants ? Math.ceil(Math.log2(tournoi.participants.length)) : 0;
 
   return (
     <div className="tournoi-page">
-      <h1 className="tournoi-title">Quel chat gagne le 1v1 ?</h1>
-      <p className="tournoi-subtitle">Choisis le plus mignon 😍</p>
+      <h1 className="tournoi-title">Tournoi des races de chats</h1>
+      <p className="tournoi-subtitle">Vote pour ton chat préféré à chaque tour !</p>
 
-      {loading ? (
-        <p className="tournoi-loading">Chargement...</p>
-      ) : (
+      {error && <div className="tournoi-error">{error}</div>}
+
+      {!tournoi && (
+        <div style={{display:'flex', flexDirection:'column', gap:12, alignItems:'center'}}>
+          <h2 style={{marginBottom:0}}>Aucun tournoi en cours</h2>
+          <p style={{marginTop:0, color:'#888'}}>Clique sur un bouton pour commencer un tournoi</p>
+          <button className="start-btn" onClick={handleStart} disabled={loading}>
+            {loading ? "Chargement..." : "Lancer un tournoi (8 races aléatoires)"}
+          </button>
+          <button className="start-btn" onClick={handleStartAllBreeds} disabled={loading}>
+            {loading ? "Chargement..." : "Tournoi toutes les races (long)"}
+          </button>
+        </div>
+      )}
+
+      {tournoi && currentMatch && (
         <>
+          <div style={{display:'flex', flexDirection:'column', alignItems:'center', marginBottom:12}}>
+            <h2 className="tournoi-round" style={{marginBottom:4}}>
+              {roundName}
+              {totalRounds > 0 && (
+                <span style={{fontWeight:400, fontSize:'1rem'}}> ({`Tour ${currentRoundNumber} / ${totalRounds}`})</span>
+              )}
+            </h2>
+            <span style={{color:'#6c63ff', fontWeight:500}}>
+              Tour actuel : {currentRoundNumber} / {totalRounds}
+            </span>
+          </div>
           <div className="tournoi-wrapper">
             <div className="cat-card left-card">
-              {cat1 && (
+              {currentMatch.cat1 && (
                 <>
-                  <img src={cat1.url} alt={breed1.name || "chat 1"} className="cat-image" />
-
+                  <img src={currentMatch.cat1.url} alt={currentMatch.cat1.breed} className="cat-image" />
                   <div className="cat-overlay left-overlay">
-                    <h2>Race : {breed1.name}</h2>
-                    <p><strong>Poids :</strong> {breed1.weight} kg </p>
-                    <p><strong>Durée de vie :</strong> {breed1.lifeSpan}</p>
-                    <p><strong>Tempérament :</strong> {breed1.temperament}</p>
+                    <h2>Race : {currentMatch.cat1.breed}</h2>
                   </div>
-
-                  <button className="choose-btn left-btn" onClick={fetchCats}>
+                  <button
+                    className="choose-btn left-btn"
+                    onClick={() => handleVote(currentMatch.id, currentMatch.cat1.id)}
+                    disabled={loading || voted}
+                  >
                     Choisir ce chat
                   </button>
                 </>
               )}
             </div>
-
             <div className="vs-circle">VS</div>
-
             <div className="cat-card right-card">
-              {cat2 && (
+              {currentMatch.cat2 && (
                 <>
-                  <img src={cat2.url} alt={breed2.name || "chat 2"} className="cat-image" />
-
+                  <img src={currentMatch.cat2.url} alt={currentMatch.cat2.breed} className="cat-image" />
                   <div className="cat-overlay right-overlay">
-                    <h2>Race : {breed2.name}</h2>
-                    <p><strong>Poids :</strong> {breed2.weight} kg </p>
-                    <p><strong>Durée de vie :</strong> {breed2.lifeSpan}</p>
-                    <p><strong>Tempérament :</strong> {breed2.temperament}</p>
+                    <h2>Race : {currentMatch.cat2.breed}</h2>
                   </div>
-
-                  <button className="choose-btn right-btn" onClick={fetchCats}>
+                  <button
+                    className="choose-btn right-btn"
+                    onClick={() => handleVote(currentMatch.id, currentMatch.cat2.id)}
+                    disabled={loading || voted}
+                  >
                     Choisir ce chat
                   </button>
                 </>
               )}
             </div>
           </div>
-
-          <div className="next-round">
-            <button className="next-btn" onClick={fetchCats}>
-              Nouveau duel
-            </button>
-          </div>
+          {voted && <div className="tournoi-info">Merci pour ton vote !</div>}
         </>
+      )}
+
+      {tournoi && !currentMatch && (
+        <div className="tournoi-finished">
+          <h2>Tournoi terminé !</h2>
+          <p>Vainqueur : {tournoi.rounds.at(-1)?.matches?.[0]?.winner?.breed || "?"}</p>
+          <img
+            src={tournoi.rounds.at(-1)?.matches?.[0]?.winner?.url}
+            alt="Vainqueur"
+            className="cat-image"
+            style={{ maxWidth: 300 }}
+          />
+          <button className="bracket-btn" onClick={handleShowBracket} disabled={loading}>
+            Voir l'arborescence
+          </button>
+          <button className="restart-btn" onClick={handleStart} disabled={loading}>
+            Rejouer un tournoi
+          </button>
+        </div>
+      )}
+
+      {showBracket && bracket.length > 0 && (
+        <div className="bracket-section">
+          <h2>Arborescence du tournoi</h2>
+          <div className="bracket-raw">
+            {bracket.map((round, idx) => (
+              <div key={idx} className="bracket-round">
+                <h3>{round.name}</h3>
+                {round.matches.map((m, i) => (
+                  <div key={m.id} className="bracket-match">
+                    <span>{m.cat1?.breed} {m.cat2 ? `vs ${m.cat2?.breed}` : ''}</span>
+                    {m.winner && <span className="winner"> → {m.winner.breed}</span>}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+          <button className="close-bracket-btn" onClick={() => setShowBracket(false)}>
+            Fermer l'arborescence
+          </button>
+        </div>
       )}
     </div>
   );

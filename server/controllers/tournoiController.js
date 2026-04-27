@@ -2,6 +2,14 @@
 const tournoiService = require('../services/tournoiService');
 
 module.exports = {
+    deleteTournoi: async (req, res) => {
+      try {
+        await tournoiService.deleteTournoi();
+        res.status(204).end();
+      } catch (err) {
+        res.status(500).json({ error: err.message });
+      }
+    },
   startTournoi: async (req, res) => {
     try {
       const { breedIds } = req.body;

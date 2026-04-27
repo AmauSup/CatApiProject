@@ -56,6 +56,9 @@ async function searchCats(req, res, next) {
     }
     res.json(cats);
   } catch (error) {
+    if (error.status === 429) {
+      return res.status(429).json({ message: 'Trop de requêtes envoyées à TheCatAPI. Merci de patienter une minute.' });
+    }
     next(error);
   }
 }

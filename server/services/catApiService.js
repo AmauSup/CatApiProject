@@ -97,10 +97,21 @@ async function fetchSearchCats({ breedId, categoryId, limit, excludeIds = [] }) 
     };
     if (breedId) params.breed_ids = breedId;
     if (categoryId) params.category_ids = categoryId;
-    const response = await axios.get(`${CAT_API_BASE_URL}/images/search`, {
-      headers: getAuthHeaders(),
-      params
-    });
+    let response;
+    try {
+      response = await axios.get(`${CAT_API_BASE_URL}/images/search`, {
+        headers: getAuthHeaders(),
+        params
+      });
+    } catch (err) {
+      if (err.response && err.response.status === 429) {
+        // On relaye l'erreur 429 pour gestion côté contrôleur
+        const error = new Error('Rate limit atteint sur TheCatAPI');
+        error.status = 429;
+        throw error;
+      }
+      throw err;
+    }
     for (const cat of response.data) {
       if (!excludeSet.has(cat.id) && !uniqueCats.has(cat.id)) {
         uniqueCats.set(cat.id, cat);

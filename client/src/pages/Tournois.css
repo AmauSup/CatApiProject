@@ -1,3 +1,20 @@
+.quit-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 10px 18px;
+  background: #ff4d4f;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.2s;
+}
+.quit-btn:hover {
+  background: #d9363e;
+}
 .start-btn {
   padding: 12px 24px;
   font-size: 1.1rem;

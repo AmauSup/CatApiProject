@@ -4,4 +4,4 @@ describe('catService', () => {
   it.skip('should have a getRandomCats function', () => {
     // Test désactivé
   });
-});
+});});

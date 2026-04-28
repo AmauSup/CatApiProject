@@ -136,9 +136,9 @@ Si des captures sont disponibles, placez-les dans `client/src/assets/` et ajoute
 
 ## Auteurs / équipe
 
-- Amaury (étudiant)
+- Amaury
+- Vianney
+- Adam
 - Projet réalisé dans le cadre de SDV_B3
 
 ---
-
-*Pour toute question, voir la documentation dans le dossier `docs/` ou contacter l’auteur.*

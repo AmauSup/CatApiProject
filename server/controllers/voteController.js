@@ -2,6 +2,12 @@
 // Pour toute évolution, il est recommandé d’utiliser ce format pour plus de clarté et de cohérence.
 const { voteOnBreed } = require('../services/voteService');
 
+/**
+ * Enregistre un vote sur une race (met à jour breed_stats)
+ * @route POST /api/votes
+ * @param {Request} req
+ * @param {Response} res
+ */
 exports.vote = async (req, res) => {
   const { animal_id, voteType } = req.body;
   const user_id = 1; // à remplacer par req.user.id après auth
